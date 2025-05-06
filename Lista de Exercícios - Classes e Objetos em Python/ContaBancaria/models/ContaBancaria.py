@@ -32,11 +32,3 @@ class ContaBancaria:
                     
     
     
-    def transferir():
-    
-    
-    def exibirHistorico():
-    
-    
-    def exibirSaldo():
-        

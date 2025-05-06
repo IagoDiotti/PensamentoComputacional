@@ -1,24 +1,17 @@
-class Filme:
-    def __init__(self, titulo, genero, avaliacao):
-        self.titulo = titulo
-        self.genero = genero
-        self.avaliacao = avaliacao
-       
+from models.Filmes import Filmes
 
-    def avaliar(self):
-        self.avaliacao = float(input("Digite a avaliação do filme (0 a 10): "))
-        while self.avaliacao < 0 or self.avaliacao > 10:
-            print("Avaliação inválida. Digite um valor entre 0 e 10.")
-            self.avaliacao = float(input("Digite a avaliação do filme (0 a 10): "))
+TesteFilme = Filmes("O Senhor dos Anéis", "Fantasia", "")
 
-    def exibir_informacoes(filme):
-        print(f"Título: {filme.titulo}")
-        print(f"Gênero: {filme.genero}")
-        print(f"Avaliação: {filme.avaliacao}")
+TesteFilme.exibir_informacoes()
 
-TesteFilme = Filme("O Senhor dos Anéis", "Fantasia", "")
+print("Digite a para avaliar o filme ou n para não avaliar:")
+avaliar = input()
+if avaliar == "a":
+    print("Digite a avaliação do filme (0 a 10):")
+    nova_avaliacao = float(input())
+    TesteFilme.alterar_avaliacao(nova_avaliacao)
 
-TesteFilme.avaliar()
+
 
 TesteFilme.exibir_informacoes()
 
