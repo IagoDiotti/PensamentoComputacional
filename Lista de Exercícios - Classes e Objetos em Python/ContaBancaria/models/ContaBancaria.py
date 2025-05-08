@@ -11,6 +11,7 @@ class ContaBancaria:
     
     """
     import time
+    from main import Banco
     
     
     
@@ -25,16 +26,20 @@ class ContaBancaria:
         self.limite = limite
         self.historico = historico
     
-    def depositar(self, valor):
+    def depositar(self, valor, remetente = None):
         '''
         Método que realiza o depósito na conta bancária.
-        Entrada: valor (float)
+        Entrada: valor (float), remetente (str)
         return: true se a operação foi realizada com sucesso. False sea operação não foi realizada.
         '''
+        # detecta se é uma tranferência
+        op = 1
+        if remetente != None:
+            op = 2
         if valor > 0:
             self.saldo += valor
-            self.historico.append({"operacao": 1,
-                                   "remetente": self.titular,
+            self.historico.append({"operacao": op,
+                                   "remetente": remetente,
                                    "destinatario": self.titular,
                                    "valor": valor,
                                    "saldo": self.saldo,
@@ -45,17 +50,21 @@ class ContaBancaria:
             print("O Valor de depósito deve ser maior que zero.")
             return False
     
-    def sacar(self, valor):
+    def sacar(self, valor, destinatario = None):
         '''
         Método que realiza o saque na conta bancária.
-        Entrada: valor (float)
+        Entrada: valor (float), destinatario (str)
         return: true se a operação foi realizada com sucesso. False sea operação não foi realizada.
         '''
+          # detecta se é uma tranferência e muda a operação
+        op = 0
+        if destinatario != None:
+            op = 2
         if valor <= self.saldo:
             self.saldo -= valor
-            self.historico.append({"operacao": 0,
+            self.historico.append({"operacao": op,
                                    "remetente": self.titular,
-                                   "destinatario": self.titular, 
+                                   "destinatario": destinatario, 
                                    "valor": valor ,
                                    "saldo": self.saldo,
                                    "dataetempo": int(self.time.time())})
@@ -75,6 +84,20 @@ class ContaBancaria:
                 print("Operação de saque cancelado.")
                 return False
         
+    def transferir(self, destinatario, valor):
+        '''
+        Objetivo: Método para a transferência de valores entre contas bancárias.
+        Entrada: valor (float), e o obj do destinatario (str)
+        Saida: se ok ->True, se NOK -> False
+        '''
+        # se o saque ocorrer com sucesso
+        if self.sacar(valor, destinatario.titular):
+            # deposita na conta do destinatario
+            destinatario.depositar(valor, self.titular)
+            return True
+        
+            
+   
     
     def exibirHistorico(self):
         '''
@@ -91,20 +114,16 @@ class ContaBancaria:
                   "- Data e Tempo:", 
                   str(dt.tm_hour) + ":" + str(dt.tm_min) + ":" + str(dt.tm_sec) + " - " + str(dt.tm_mday) + "/" + str(dt.tm_mon) + "/" + str(dt.tm_year))
     
-    def transferir(self, titular, valor, destinatario):
+    def criarConta(self, titular,):
         '''
-        Método que realiza a transferência de valores entre contas bancárias.
-        Entrada: valor (float), destinatario (str)
-        return: true se a operação foi realizada com sucesso. False sea operação não foi realizada.
+        Método que cria uma nova conta bancária.
+        Entrada: titular (str)
+        Saida: retorna o objeto da conta bancária criada.
         '''
-        if valor <= self.saldo:
-            titular.sacar(valor)
-            destinatario.depositar(valor)
-            self.historico.append({"operacao": 2,
-                                   "remetente": self.titular,
-                                   "destinatario": destinatario.titular, 
-                                   "valor": valor ,
-                                   "saldo": self.saldo,
-                                   "dataetempo": int(self.time.time())})
-        else: #sem grana em conta
-            print("Saldo insuficiente para realizar a transferência")
+        return ContaBancaria(titular, 0, 0, [])
+    
+    
+    
+            
+    
+   
