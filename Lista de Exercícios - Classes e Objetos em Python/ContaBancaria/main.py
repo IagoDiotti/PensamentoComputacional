@@ -2,9 +2,15 @@ from models.ContaBancaria import ContaBancaria
 
 Banco = []
 
+def buscar_conta(titular):
+        for conta in Banco:
+            if conta.titular == titular:
+                return conta
+        return None
+
 print("Bem-vindo ao sistema de contas bancárias!")
 while True:
-    print("Digite o número da opção desejada:")
+    print("\nDigite o número da opção desejada:")
     print("1 - Criar conta")
     print("2 - Exibir Saldo")
     print("3 - Sacar")
@@ -12,69 +18,113 @@ while True:
     print("5 - Realizar transferência")
     print("6 - Exibir histórico")
     print("7 - Excluir conta")
+    print("8 - Sair")
     opcao = int(input("Opção: "))
-    
+
     if opcao == 1:
         titular = input("Digite o nome do titular da conta: ")
         Banco.append(ContaBancaria(titular, 0, 1000, []))
         print("Conta criada com sucesso!")
+
     elif opcao == 2:
-        titular = input("Digite o nome do titular da conta que deseja verificar o saldo: ")
-        for conta in Banco:
-            if conta.titular == titular:
-                print(f"O {titular} tem R${conta.saldo} em conta")
-    elif opcao == 3:
-        titular = input("Digite o nome do titular da conta:")
-        valor = float(input("Digite o valor que deseja sacar: "))
-        titular.sacar(valor)
-        if titular.sacar == True:
-            print("Saque realizado com sucesso ")
-    elif opcao == 4:
-        titular = input("Digite o nome do titular da conta que você deseja depositar: ")
-        valor = float(input("Digite o valor que você deseja depositar: "))
-        titular.depositar(valor)
-    elif opcao == 5:
         titular = input("Digite o nome do titular da conta: ")
-        destinatario = input("Digite o nome do destinatário: ")
-        valor = float(input(f"Digite o valor que deseja tranferir para a conta de {destinatario}"))
-        titular.transferir(destinatario, valor)
+        conta = buscar_conta(titular)
+        if conta:
+            print(f"O {titular} tem R${conta.saldo:.2f} em conta.")
+        else:
+            print("Conta não encontrada.")
+
+    elif opcao == 3:
+        titular = input("Digite o nome do titular da conta: ")
+        conta = buscar_conta(titular)
+        if conta:
+            valor = float(input("Digite o valor que deseja sacar: "))
+            if conta.sacar(valor):
+                print("Saque realizado com sucesso.")
+            else:
+                print("Saldo insuficiente ou valor inválido.")
+        else:
+            print("Conta não encontrada.")
+
+    elif opcao == 4:
+        titular = input("Digite o nome do titular da conta: ")
+        conta = buscar_conta(titular)
+        if conta:
+            valor = float(input("Digite o valor que deseja depositar: "))
+            if conta.depositar(valor):
+                print("Depósito realizado com sucesso.")
+            else:
+                print("Valor inválido.")
+        else:
+            print("Conta não encontrada.")
+
+    elif opcao == 5:
+        origem_nome = input("Digite o nome do titular da conta de origem: ")
+        destino_nome = input("Digite o nome do destinatário: ")
+        valor = float(input(f"Digite o valor que deseja transferir: "))
+        conta_origem = buscar_conta(origem_nome)
+        conta_destino = buscar_conta(destino_nome)
+        if conta_origem and conta_destino and conta_origem != conta_destino:
+            if conta_origem.transferir(conta_destino, valor):
+                print("Transferência realizada com sucesso.")
+            else:
+                print("Transferência não realizada. Verifique o saldo ou o valor.")
+        else:
+            print("Conta de origem ou destino não encontrada, ou são a mesma conta.")
+
     elif opcao == 6:
-        titular = input("Digite o nome do titular da conta que deseja verificar o histórico: ")
-        titular.exibirHistorico()
+        titular = input("Digite o nome do titular da conta: ")
+        conta = buscar_conta(titular)
+        if conta:
+            conta.exibirHistorico()
+        else:
+            print("Conta não encontrada.")
+
     elif opcao == 7:
-        titular = input("Digite o nome do titular da conta que deseja ser excluída: ")
-        for conta in Banco:
-            if conta.titular == titular:   
-                while True:
-                    if conta.saldo > 0:
-                        print("Não é possível excluir uma conta com fundos.")
-                        print(f"Saldo restante: {conta.saldo}")
-                        destinatario = input("Insira uma conta para transferir o saldo restante: ")
-                        titular.transferir(destinatario, conta.saldo)
-                        if titular.transferir(destinatario, conta.saldo):
-                            break
-                        else:
-                            print("Não foi possível prosseguir com o encerramento da conta")
-                    elif conta.saldo < 0:
-                        print("Não foi possível encerrar a conta devido ao saldo negativado.")
-                        print(f"Deposite {abs(conta.saldo)} para regularizar a sua conta e seguir com a exclusão!")
-                        resposta = input(f"Digite s para confirmar o depósito de {conta.saldo} e regularizar a sua conta: ")
-                        if resposta == "s":
-                            titular.deposito(conta.saldo * -1)
-                            if titular.deposito(conta.saldo * -1):
-                                break
-                            else:
-                                print("Não foi possível prosseguir com o encerramento da conta")
-                        else:
-                            break
-                    elif conta.saldo == 0:
-                        resposta = input("Digite [s] para confirmar a exclusão da conta: ")       
-                        if resposta == "s":
-                            Banco.remove(titular.ContaBancaria)
-                        else:
-                            print("Operação cancelada")
-                    else:
-                        print("Não foi possível concluir a operação, verifique os valores inseridos e tente novamente!")
-                        break
+        titular = input("Digite o nome do titular da conta que deseja excluir: ")
+        conta = buscar_conta(titular)
+
+        if not conta:
+            print("Conta não encontrada.")
+            continue
+
+        if conta.saldo > 0:
+            print(f"Conta com saldo R${conta.saldo}. Transfira o valor antes de excluir.")
+            destinatario_nome = input("Digite o nome da conta destinatária: ")
+            destinatario = buscar_conta(destinatario_nome)
+            if destinatario and destinatario != conta:
+                if conta.transferir(destinatario, conta.saldo):
+                    print("Transferência realizada.")
+                else:
+                    print("Erro na transferência. Conta não excluída.")
+                    continue
+            else:
+                print("Destinatário inválido.")
+                continue
+
+        elif conta.saldo < 0:
+            print(f"Conta com saldo negativo R${conta.saldo}. Deposite para regularizar.")
+            resposta = input("Deseja regularizar e excluir a conta? (s/n): ")
+            if resposta == 's':
+                if conta.depositar(abs(conta.saldo)):
+                    print("Conta regularizada.")
+                else:
+                    print("Erro no depósito.")
+                    continue
+            else:
+                continue
+
+        if conta.saldo == 0:
+            resposta = input("Deseja realmente excluir a conta? (s/n): ")
+            if resposta == 's':
+                Banco.remove(conta)
+                print("Conta excluída com sucesso.")
+            else:
+                print("Operação cancelada.")
+
+    elif opcao == 8:
+        print("Encerrando o programa. Até logo!")
+        break
+
     else:
-        print("Comando desconhecido, encerrando programa!")
+        print("Comando desconhecido. Tente novamente.")

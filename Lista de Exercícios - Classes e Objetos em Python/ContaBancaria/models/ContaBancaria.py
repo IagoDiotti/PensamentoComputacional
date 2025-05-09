@@ -11,7 +11,7 @@ class ContaBancaria:
     
     """
     import time
-    from main import Banco
+
     
     
     
@@ -114,13 +114,6 @@ class ContaBancaria:
                   "- Data e Tempo:", 
                   str(dt.tm_hour) + ":" + str(dt.tm_min) + ":" + str(dt.tm_sec) + " - " + str(dt.tm_mday) + "/" + str(dt.tm_mon) + "/" + str(dt.tm_year))
     
-    def criarConta(self, titular,):
-        '''
-        Método que cria uma nova conta bancária.
-        Entrada: titular (str)
-        Saida: retorna o objeto da conta bancária criada.
-        '''
-        return ContaBancaria(titular, 0, 0, [])
     
     
     
