@@ -1,3 +1,5 @@
+import time
+
 class ContaBancaria:
     """
     Classe que implementa métodos parar manipular uma conta bancária.
@@ -10,7 +12,7 @@ class ContaBancaria:
     OBS: Operações no histórico: 0 - sacar, 1- depositar, 2 - transferir
     
     """
-    import time
+    
 
     
     
@@ -43,9 +45,9 @@ class ContaBancaria:
                                    "destinatario": self.titular,
                                    "valor": valor,
                                    "saldo": self.saldo,
-                                   "dataetempo": int(self.time.time())})
-            return True
+                                   "dataetempo": int(time.time())})
             print(f"Depósito de R${valor} realizado com sucesso.")
+            return True
         else:
             print("O Valor de depósito deve ser maior que zero.")
             return False
@@ -67,9 +69,9 @@ class ContaBancaria:
                                    "destinatario": destinatario, 
                                    "valor": valor ,
                                    "saldo": self.saldo,
-                                   "dataetempo": int(self.time.time())})
-            return True
+                                   "dataetempo": int(time.time())})
             print(f"Saque de R${valor} realizado com sucesso.")
+            return True
         else: #sem grana em conta
             a = input(f"Você não tem saldo suficiente. Deseja usar o limite? (R${self.limite}) [s para sim]")
             if a == 's':
@@ -77,7 +79,7 @@ class ContaBancaria:
                     self.saldo -= valor
                     
                     print(f"Saque de R${valor} realizado com sucesso.")
-                    return
+                    return True
                 else:
                     print("saldo e limite insuficientes.")
             else:
@@ -94,20 +96,22 @@ class ContaBancaria:
         if self.sacar(valor, destinatario.titular):
             # deposita na conta do destinatario
             destinatario.depositar(valor, self.titular)
+            print("Transferência realizada com sucesso.")
             return True
-        
+        else:
+            print("Transferência não realizada. Verifique o saldo ou o valor.")
+            return False   
             
    
-    
     def exibirHistorico(self):
         '''
         Método que exibe o histórico de operações da conta bancária.
         '''
         print("Histórico de operações:")
         for transacao in self.historico:
-            dt = self.time.localtime(transacao["dataetempo"])
+            dt = time.localtime(transacao["dataetempo"])
             print("- Op:", transacao["operacao"],
-                  "- Rementente:", transacao["remetente"],
+                  "- Remetente:", transacao["remetente"],
                   "- Destinatário:", transacao["destinatario"],
                   "- Saldo:", transacao["saldo"], 
                   "- valor:", transacao["valor"],

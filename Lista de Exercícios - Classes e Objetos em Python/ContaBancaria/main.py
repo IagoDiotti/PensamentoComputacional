@@ -39,10 +39,7 @@ while True:
         conta = buscar_conta(titular)
         if conta:
             valor = float(input("Digite o valor que deseja sacar: "))
-            if conta.sacar(valor):
-                print("Saque realizado com sucesso.")
-            else:
-                print("Saldo insuficiente ou valor inválido.")
+            conta.sacar(valor)
         else:
             print("Conta não encontrada.")
 
@@ -51,13 +48,10 @@ while True:
         conta = buscar_conta(titular)
         if conta:
             valor = float(input("Digite o valor que deseja depositar: "))
-            if conta.depositar(valor):
-                print("Depósito realizado com sucesso.")
-            else:
-                print("Valor inválido.")
+            conta.depositar(valor)
         else:
             print("Conta não encontrada.")
-
+            
     elif opcao == 5:
         origem_nome = input("Digite o nome do titular da conta de origem: ")
         destino_nome = input("Digite o nome do destinatário: ")
@@ -65,10 +59,7 @@ while True:
         conta_origem = buscar_conta(origem_nome)
         conta_destino = buscar_conta(destino_nome)
         if conta_origem and conta_destino and conta_origem != conta_destino:
-            if conta_origem.transferir(conta_destino, valor):
-                print("Transferência realizada com sucesso.")
-            else:
-                print("Transferência não realizada. Verifique o saldo ou o valor.")
+            conta_origem.transferir(conta_destino, valor)
         else:
             print("Conta de origem ou destino não encontrada, ou são a mesma conta.")
 
