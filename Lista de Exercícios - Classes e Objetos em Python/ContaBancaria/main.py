@@ -2,12 +2,17 @@ from models.ContaBancaria import ContaBancaria
 
 Banco = []
 
-def buscar_conta(titular):
+def buscar_conta(titular):  
         for conta in Banco:
-            if conta.titular == titular:
+            if conta.getTitular() == titular:
                 return conta
         return None
 
+def buscar_conta_por_chave_pix(chave_pix):  
+        for chave in conta.getChavesPix():
+            if chave_pix in conta.getChavesPix():
+                return conta
+        return None
 print("Bem-vindo ao sistema de contas bancárias!")
 while True:
     print("\nDigite o número da opção desejada:")
@@ -18,12 +23,14 @@ while True:
     print("5 - Realizar transferência")
     print("6 - Exibir histórico")
     print("7 - Excluir conta")
-    print("8 - Sair")
+    print("8 - Realizar transferência via PIX")
+    print("9 - Sair")
     opcao = int(input("Opção: "))
 
     if opcao == 1:
         titular = input("Digite o nome do titular da conta: ")
-        Banco.append(ContaBancaria(titular, 0, 1000, []))
+        chave_pix = input("Digite chave pix que deseja cadastrar: ")
+        Banco.append(ContaBancaria(titular, 0, 1000, [chave_pix], []))
         print("Conta criada com sucesso!")
 
     elif opcao == 2:
@@ -114,8 +121,17 @@ while True:
                 print("Operação cancelada.")
 
     elif opcao == 8:
+        origem_nome = input("Digite o nome do titular da conta: ")
+        chave_transferencia = input("Digite a chave PIX que deseja realizar a transferência: ")
+        valor = float(input("Digite o valor que deseja transferir: "))
+        conta = buscar_conta_por_chave_pix(chave_transferencia)
+        origem_nome.transferir(conta, valor)
+    
+    
+    elif opcao == 9:
         print("Encerrando o programa. Até logo!")
         break
 
     else:
         print("Comando desconhecido. Tente novamente.")
+
