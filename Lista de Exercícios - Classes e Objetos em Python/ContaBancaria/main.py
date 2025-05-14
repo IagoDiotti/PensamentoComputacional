@@ -1,35 +1,37 @@
 from models.ContaBancaria import ContaBancaria
 
-Banco = []
+Banco = [] # Lista de contas bancárias
 
-def buscar_conta(titular):  
+def buscar_conta(titular):  # função para buscar conta por titular
         for conta in Banco:
             if conta.getTitular() == titular:
                 return conta
         return None
 
-def buscar_conta_por_chave_pix(chave_pix):  
-        for chave in conta.getChavesPix():
-            if chave_pix in conta.getChavesPix():
-                return conta
-        return None
+def buscar_conta_por_chave_pix(chave_pix):  # função para buscar conta por chave pix
+    for conta in Banco:
+        if chave_pix in conta.getChavesPix():  
+            return conta 
+    return None  
 print("Bem-vindo ao sistema de contas bancárias!")
-while True:
+while True: 
     print("\nDigite o número da opção desejada:")
     print("1 - Criar conta")
     print("2 - Exibir Saldo")
     print("3 - Sacar")
     print("4 - Depositar")
     print("5 - Realizar transferência")
-    print("6 - Exibir histórico")
-    print("7 - Excluir conta")
-    print("8 - Realizar transferência via PIX")
+    print("6 - Realizar transferência via PIX")
+    print("7 - Exibir histórico de transações")
+    print("8 - Excluir conta")
     print("9 - Sair")
     opcao = int(input("Opção: "))
 
     if opcao == 1:
         titular = input("Digite o nome do titular da conta: ")
         chave_pix = input("Digite chave pix que deseja cadastrar: ")
+        if chave_pix in Banco:
+            print("Chave já cadastrada. Tente novamente.")
         Banco.append(ContaBancaria(titular, 0, 1000, [chave_pix], []))
         print("Conta criada com sucesso!")
 
@@ -69,8 +71,23 @@ while True:
             conta_origem.transferir(conta_destino, valor)
         else:
             print("Conta de origem ou destino não encontrada, ou são a mesma conta.")
-
+            
     elif opcao == 6:
+
+        origem_nome = input("Digite o nome do titular da conta de origem: ")
+        chave_transferencia = input("Digite a chave PIX do destinatário: ")
+        valor = float(input(f"Digite o valor que deseja transferir: "))
+    
+        conta_origem = buscar_conta(origem_nome)
+        conta_destino = buscar_conta_por_chave_pix(chave_transferencia)
+    
+        if conta_origem and conta_destino and conta_origem != conta_destino:
+            conta_origem.transferir(conta_destino, valor)  # Chamada correta
+        else:
+            print("Conta de origem ou destino não encontrada, ou são a mesma conta.")
+            
+
+    elif opcao == 7:
         titular = input("Digite o nome do titular da conta: ")
         conta = buscar_conta(titular)
         if conta:
@@ -78,7 +95,7 @@ while True:
         else:
             print("Conta não encontrada.")
 
-    elif opcao == 7:
+    elif opcao == 8:
         titular = input("Digite o nome do titular da conta que deseja excluir: ")
         conta = buscar_conta(titular)
 
@@ -120,13 +137,6 @@ while True:
             else:
                 print("Operação cancelada.")
 
-    elif opcao == 8:
-        origem_nome = input("Digite o nome do titular da conta: ")
-        chave_transferencia = input("Digite a chave PIX que deseja realizar a transferência: ")
-        valor = float(input("Digite o valor que deseja transferir: "))
-        conta = buscar_conta_por_chave_pix(chave_transferencia)
-        origem_nome.transferir(conta, valor)
-    
     
     elif opcao == 9:
         print("Encerrando o programa. Até logo!")

@@ -94,7 +94,7 @@ class ContaBancaria:
         Saida: se ok ->True, se NOK -> False
         '''
         # se o saque ocorrer com sucesso
-        if self.sacar(valor, destinatario.titular):
+        if self.sacar(valor, destinatario.getTitular):
             # deposita na conta do destinatario
             destinatario.depositar(valor, self.__titular)
             print("Transferência realizada com sucesso.")
