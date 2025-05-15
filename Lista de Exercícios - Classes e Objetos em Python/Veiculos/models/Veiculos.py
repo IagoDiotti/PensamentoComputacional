@@ -25,4 +25,11 @@ class Veiculos:
         ''' Retorna a placa do veiculo '''
         return self.__placa
     
-    
+    def setValorFipe(self, valor: float) -> None:
+        '''Método que altera o valor de fipe do veiculo
+        
+        Argumento: valor (float): novo valor da fipe
+        saída: True se ok
+        '''
+        self.__valor_fipe = valor
+        return True
