@@ -20,7 +20,7 @@ class CarroConvEletrico(CarroCombustao, CarroEletrico):
         infos = super().__str__()
         infos += f"Nível de Bateria: {CarroEletrico.get_nivel_bateria(self)}"
         infos += f"\nTipo de Bateria: {CarroEletrico.get_tipo_bateria(self)}"
-        infos += f"\nAutonomia: {CarroEletrico.get_autonomia}\n"
+        infos += f"\nAutonomia: {CarroEletrico.get_autonomia(self)}\n"
         return infos
         
     def abastecer(self, percentual_adicionado: int) -> str:
