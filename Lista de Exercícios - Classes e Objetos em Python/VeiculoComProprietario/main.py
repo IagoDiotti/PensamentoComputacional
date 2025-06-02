@@ -7,7 +7,7 @@ from tkinter import ttk, messagebox
 import re
 from datetime import datetime
 from models.Proprietario import Proprietario
-
+"""
 
 # Classe principal
 class SistemaVeiculos:
@@ -359,21 +359,29 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = SistemaVeiculos(root)
     root.mainloop()
+    """
     
     
-    import tkinter as tk
+import tkinter as tk
 from tkinter import messagebox
 from models.Proprietario import Proprietario
 
 proprietarios = []
 
+
+
 def cadastrar_proprietario():
     def salvar():
         nome = entry_nome.get()
         cpf = entry_cpf.get()
+        veiculos = entry_veiculos.get().split(',')
+        
+        
+       
         try:
-            novo = Proprietario(nome, cpf)
+            novo = Proprietario(nome, cpf, veiculos)
             proprietarios.append(novo)
+            Proprietario.adicionar_veiculo(novo, veiculos)
             messagebox.showinfo("Sucesso", "Proprietário cadastrado.")
             janela.destroy()
         except ValueError as e:
@@ -389,8 +397,13 @@ def cadastrar_proprietario():
     tk.Label(janela, text="CPF:").grid(row=1, column=0)
     entry_cpf = tk.Entry(janela)
     entry_cpf.grid(row=1, column=1)
+    
+    tk.Label(janela, text="Veículo:").grid(row=2, column=0)
+    entry_veiculos = tk.Entry(janela)
+    entry_veiculos.grid(row=2, column=1)
 
-    tk.Button(janela, text="Salvar", command=salvar).grid(row=2, column=0, columnspan=2)
+
+    tk.Button(janela, text="Salvar", command=salvar).grid(row=3, column=0, columnspan=2)
 
 def listar_proprietarios():
     janela = tk.Toplevel()
@@ -398,7 +411,7 @@ def listar_proprietarios():
     if not proprietarios:
         tk.Label(janela, text="Nenhum proprietário cadastrado.").pack()
     for i, prop in enumerate(proprietarios):
-        texto = f"{i+1}. Nome: {prop.nome} | CPF: {prop.cpf} | Placas: {', '.join(prop.placas) if prop.placas else 'Nenhuma'}"
+        texto = print(Proprietario)
         tk.Label(janela, text=texto).pack(anchor='w')
 
 root = tk.Tk()

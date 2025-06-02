@@ -1,12 +1,13 @@
 import re
 
 class Proprietario:
-    def __init__(self, nome, cpf):
+    def __init__(self, nome, cpf, veiculos):
         if not self.validar_cpf(cpf):
             raise ValueError("CPF inválido")
         self.nome = nome
         self.cpf = cpf
         self.veiculos = []  # Lista de placas de veículos
+    
 
     def validar_cpf(self, cpf):
         cpf = re.sub(r'[^0-9]', '', cpf)
@@ -26,4 +27,9 @@ class Proprietario:
             raise ValueError("Placa inválida")
 
     def __str__(self):
-        return f'{self.nome} (CPF: {self.cpf}) - Veículos: {", ".join(self.veiculos) if self.veiculos else "Nenhum"}'
+        infos = f'{self.nome} (CPF: {self.cpf}) - Veículos: {', '.join(self.veiculos)}'
+        return infos.rstrip(', ')
+    
+
+            
+        
